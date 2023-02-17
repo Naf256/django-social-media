@@ -1,0 +1,86 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<h2>{{ owner.username }}</h2>
+<div>
+	<p>Followers: {{ followers }}</p>
+</div>
+<div>
+	<p>Following: {{ following }}</p>
+</div>
+
+{% if user.id != owner.id %}
+
+	{% if show_follow %}
+	<div>
+		<form action="{% url 'follow' owner.id %}" method="post">
+			<button type="submit">
+				follow
+			</button>
+		</form>
+	</div>
+	{% else %}
+	<div>
+		<form action="{% url 'follow' owner.id %}" method="post">
+			<button type="submit">
+				unfollow
+			</button>
+		</form>
+	</div>
+	{% endif %}
+
+{% endif %}
+
+{% for post in posts %}
+	{% if post in liked_posts %}
+		<div style="border-style: ridge; padding: 2rem;">
+			<p>
+				<a href="{% url 'profile' post.creator.id %}">
+					<b>{{ post.creator }}</b>
+				</a>
+			</p>
+			<div id="div{{ post.id }}">
+				<p id="{{ post.id }}">{{ post.content }}</p>
+				{% if user.id == post.creator.id %}
+					<p style="color: #60a5fa;" id="edit{{ post.id }}" onclick="handle({{ post.id }})">edit</p>
+				{% endif %}
+			</div>
+			<p style="color: #374151;">{{ post.created_on }}</p>
+			<p>{{ post.like }}</p>
+			<form action="{% url 'like' post.id %}" method="post">
+				<button
+					type="submit"
+					style="padding-top: 0.4rem; padding-bottom: 0.4rem; padding-left: 0.9rem; padding-right: 0.9rem; border-radius: 0.4rem; background-color: #60a5fa; color: #ffffff; font-weight: 700; border-style: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);"
+				>
+					unlike</button>
+			</form>
+			<p style="font-weight: 200;">Comment</p>
+		</div>
+	{% else %}
+		<div style="border-style: ridge; padding: 2rem;">
+			<p>
+				<a href="{% url 'profile' post.creator.id %}">
+					<b>{{ post.creator }}</b>
+				</a>
+			</p>
+			<div id="div{{ post.id }}">
+				<p id="{{ post.id }}">{{ post.content }}</p>
+				{% if user.id == post.creator.id %}
+					<p style="color: #60a5fa;" id="edit{{ post.id }}" onclick="handle({{ post.id }})">edit</p>
+				{% endif %}
+			</div>
+			<p style="color: #374151;">{{ post.created_on }}</p>
+			<p>{{ post.like }}</p>
+			<form action="{% url 'like' post.id %}" method="post">
+				<button 
+					type="submit"
+					style="padding-top: 0.4rem; padding-bottom: 0.4rem; padding-left: 0.9rem; padding-right: 0.9rem; border-radius: 0.4rem; background-color: #60a5fa; color: #ffffff; font-weight: 700; border-style: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);"
+				>
+					like
+				</button>
+			</form>
+			<p style="color: #374151;">Comment</p>
+		</div>
+	{% endif %}
+{% endfor %}
+{% endblock %}

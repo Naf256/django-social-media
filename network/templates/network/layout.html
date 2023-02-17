@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Social Network{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+
+		<script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+		<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    </head>
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{% url 'index' %}">Network</a>
+          
+            <div>
+              <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' user.id %}"><strong>{{ user.username }}</strong></a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'index' %}">All Posts</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+						<a class="nav-link" href="{% url 'following' %}">Following</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+              </ul>
+            </div>
+          </nav>
+        
+		  <div class="body">
+            {% block body %}
+            {% endblock %}
+			
+        </div>
+    </body>
+	<script>
+		function handle(num) {
+			const p = document.getElementById(num);
+			const edit = document.getElementById(`edit${num}`);
+			edit.style.display = 'none'
+			p.style.display = 'none'
+			const div = document.createElement('div');
+			const text = document.createElement('textarea');
+			text.rows = 5
+			text.cols = 20
+
+			const post = document.createElement('input')
+			post.type = 'submit'
+			post.value = 'save'
+
+			const cancel = document.createElement('input')
+			cancel.type = 'submit'
+			cancel.value = 'cancel'
+
+			const div2 = document.getElementById(`div${num}`);
+			div2.append(text);
+			div2.append(post);
+			div2.append(cancel);
+
+			post.addEventListener('click', (e) => {
+				e.preventDefault()
+				console.log(text.value)
+				const newContent = text.value
+				text.style.display = 'none'
+				post.style.display = 'none'
+				cancel.style.display = 'none'
+				p.innerHTML = text.value
+				p.style.display = 'block'
+				edit.style.display = 'block'
+
+				fetch(`http://localhost:8000/edit/${num}`, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						content: newContent,
+					})
+				})
+					.then(() => console.log('success'))
+					.catch(() => console.log('failure'))
+			})
+
+			cancel.addEventListener('click', (e) => {
+				e.preventDefault()
+				text.style.display = 'none'
+				post.style.display = 'none'
+				cancel.style.display = 'none'
+				p.style.display = 'block'
+				edit.style.display = 'block'
+			})
+		}
+	</script>
+</html>
