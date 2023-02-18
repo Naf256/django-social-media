@@ -1,4 +1,5 @@
 import json
+from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -113,7 +114,7 @@ def like(request, id):
         post.likes.add(request.user)
         post.save()
     
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponse('successfully liked/unliked the post')
 
 
 

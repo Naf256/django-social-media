@@ -11,7 +11,6 @@
 	  >
 	  </textarea>
 	  <button 
-		onClick={handleSubmit}
 		style="padding-top: 0.4rem; padding-bottom: 0.4rem; padding-left: 0.9rem; padding-right: 0.9rem; border-radius: 0.4rem; background-color: #60a5fa; color: #ffffff; font-weight: 700; border-style: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);"
 	  >
 		Post
@@ -35,14 +34,14 @@
 				{% endif %}
 			</div>
 			<p style="color: #374151;">{{ post.created_on }}</p>
-			<p>{{ post.like }}</p>
-			<form action="{% url 'like' post.id %}" method="post">
-				<button
-					type="submit"
-					style="padding-top: 0.4rem; padding-bottom: 0.4rem; padding-left: 0.9rem; padding-right: 0.9rem; border-radius: 0.4rem; background-color: #60a5fa; color: #ffffff; font-weight: 700; border-style: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);"
-				>
-					unlike</button>
-			</form>
+			<p id="like{{ post.id }}">{{ post.like }}</p>
+			<input
+				id="like_button{{ post.id }}"
+				type="button"
+				value="unlike"
+				onclick="handleLike({{ post.id }})"
+				style="padding-top: 0.4rem; padding-bottom: 0.4rem; padding-left: 0.9rem; padding-right: 0.9rem; border-radius: 0.4rem; background-color: #60a5fa; color: #ffffff; font-weight: 700; border-style: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);"
+			/>
 			<p style="font-weight: 200;">Comment</p>
 		</div>
 	{% else %}
@@ -59,15 +58,14 @@
 				{% endif %}
 			</div>
 			<p style="color: #374151;">{{ post.created_on }}</p>
-			<p>{{ post.like }}</p>
-			<form action="{% url 'like' post.id %}" method="post">
-				<button 
-					type="submit"
-					style="padding-top: 0.4rem; padding-bottom: 0.4rem; padding-left: 0.9rem; padding-right: 0.9rem; border-radius: 0.4rem; background-color: #60a5fa; color: #ffffff; font-weight: 700; border-style: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);"
-				>
-					like
-				</button>
-			</form>
+			<p id="like{{ post.id }}">{{ post.like }}</p>
+			<input 
+				id="like_button{{ post.id }}"
+				value="like"
+				type="button"
+				onclick="handleLike({{ post.id }})"
+				style="padding-top: 0.4rem; padding-bottom: 0.4rem; padding-left: 0.9rem; padding-right: 0.9rem; border-radius: 0.4rem; background-color: #60a5fa; color: #ffffff; font-weight: 700; border-style: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);"
+			/>
 			<p style="color: #374151;">Comment</p>
 		</div>
 	{% endif %}
