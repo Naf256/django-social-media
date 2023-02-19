@@ -46,7 +46,7 @@ def follow(request, id):
     
 
 @csrf_exempt
-def profile(request, id):
+def profile(request, id, page_num=1):
     user = User.objects.get(pk=id)
 
     follow = Follow.objects.get(user=user)
@@ -64,19 +64,26 @@ def profile(request, id):
     if already_follow:
         show_follow = 0
 
+    p = Paginator(posts, 10)
+    posts = p.page(page_num)
 
     return render(request, "network/profile.html", {
         "following": following,
         "followers": followers,
-        "posts": posts,
+        "posts": posts.object_list,
         "liked_posts": liked_posts,
         "owner": user,
-        "show_follow": show_follow
+        "show_follow": show_follow,
+        "page_range": p.page_range,
+        "previous_page_number": posts.previous_page_number() if posts.has_previous() else 0,
+        "next_page_number": posts.next_page_number() if posts.has_next() else 0,
+        "previous": posts.has_previous(),
+        "next": posts.has_next(),
     })
 
 
 @csrf_exempt
-def following(request):
+def following(request, page_num=1):
     user = request.user
     follow = Follow.objects.get(user=user)
 
@@ -95,9 +102,17 @@ def following(request):
         if post in liked:
             liked_posts.append(post)
 
+    p = Paginator(posts, 10)
+    posts = p.page(page_num)
+
     return render(request, "network/following.html", {
-        "posts": posts,
-        "liked_posts": liked_posts
+        "posts": posts.object_list,
+        "liked_posts": liked_posts,
+        "page_range": p.page_range,
+        "previous_page_number": posts.previous_page_number() if posts.has_previous() else 0,
+        "next_page_number": posts.next_page_number() if posts.has_next() else 0,
+        "previous": posts.has_previous(),
+        "next": posts.has_next(),
     })
 
 
@@ -119,14 +134,21 @@ def like(request, id):
 
 
 
-def index(request):
+def index(request, page_num=1):
     if request.user.is_authenticated:
-        posts = Post.objects.all()
+        objects = Post.objects.all()
+        p = Paginator(objects, 10)
+        posts = p.page(page_num)
         liked_posts = Post.objects.filter(likes=request.user)
 
         return render(request, "network/index.html", {
-            "posts": posts,
+            "posts": posts.object_list,
             "liked_posts": liked_posts,
+            "page_range": p.page_range,
+            "previous_page_number": posts.previous_page_number() if posts.has_previous() else 0,
+            "next_page_number": posts.next_page_number() if posts.has_next() else 0,
+            "previous": posts.has_previous(),
+            "next": posts.has_next(),
         })
     else:
         return HttpResponseRedirect(reverse("login"))
