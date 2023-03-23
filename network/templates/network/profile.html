@@ -3,7 +3,7 @@
 {% block body %}
 <h2>{{ owner.username }}</h2>
 <div>
-	<p>Followers: {{ followers }}</p>
+	<p>Followers: <span id="followerNumber">{{ followers }}</span></p>
 </div>
 <div>
 	<p>Following: {{ following }}</p>
@@ -13,19 +13,17 @@
 
 	{% if show_follow %}
 	<div>
-		<form action="{% url 'follow' owner.id %}" method="post">
-			<button type="submit">
-				follow
-			</button>
-		</form>
+		<button 
+			onclick="handleFollow({{ owner.id }})" 
+			id="followButton"
+		>follow</button>
 	</div>
 	{% else %}
 	<div>
-		<form action="{% url 'follow' owner.id %}" method="post">
-			<button type="submit">
-				unfollow
-			</button>
-		</form>
+		<button
+			onclick="handleFollow({{ owner.id }})"
+			id="followButton"
+		>unfollow</button>
 	</div>
 	{% endif %}
 

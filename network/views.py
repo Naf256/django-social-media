@@ -9,6 +9,7 @@ from django.urls import reverse
 
 from .models import User, Post, Follow
 
+
 @csrf_exempt
 def edit(request, id):
     if request.method == 'GET':
@@ -21,7 +22,8 @@ def edit(request, id):
     post.content = content
     post.save()
     return HttpResponse('successful')
-        
+
+
 @csrf_exempt
 def follow(request, id):
     profile = User.objects.get(pk=id)
@@ -36,14 +38,14 @@ def follow(request, id):
         profile_owner.save()
         user.following.remove(profile)
         user.save()
-        return HttpResponseRedirect(reverse("profile", args=[id]))
+        return HttpResponse('unfollowing the profile')
 
     profile_owner.followers.add(request.user)
     profile_owner.save()
     user.following.add(profile)
     user.save()
-    return HttpResponseRedirect(reverse("profile", args=[id]))
-    
+    return HttpResponse('following the profile')
+
 
 @csrf_exempt
 def profile(request, id, page_num=1):
@@ -56,9 +58,9 @@ def profile(request, id, page_num=1):
 
     posts = Post.objects.filter(creator=user)
     liked_posts = Post.objects.filter(likes=user, creator=user)
-    
+
     already_follow = Follow.objects.filter(user=request.user, following=user)
-    
+
     show_follow = 1
 
     if already_follow:
@@ -94,7 +96,7 @@ def following(request, page_num=1):
     posts = Post.objects.none()
 
     for u in followings:
-        posts = posts|Post.objects.filter(creator=u)
+        posts = posts | Post.objects.filter(creator=u)
 
     liked = Post.objects.filter(likes=request.user)
 
@@ -128,10 +130,8 @@ def like(request, id):
         post.like = post.like + 1
         post.likes.add(request.user)
         post.save()
-    
+
     return HttpResponse('successfully liked/unliked the post')
-
-
 
 
 def index(request, page_num=1):
@@ -152,6 +152,7 @@ def index(request, page_num=1):
         })
     else:
         return HttpResponseRedirect(reverse("login"))
+
 
 @csrf_exempt
 def post(request):

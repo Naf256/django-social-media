@@ -52,6 +52,30 @@
         </div>
     </body>
 	<script>
+		function handleFollow(owner_id) {
+			const followerNumber = document.getElementById('followerNumber')
+			const followButton = document.getElementById('followButton')
+
+			if (followButton.innerHTML === 'follow') {
+
+				followerNumber.innerHTML = parseInt(followerNumber.innerHTML) + 1
+				followButton.textContent = 'unfollow'
+
+			} else {
+				followerNumber.innerHTML = parseInt(followerNumber.innerHTML) - 1
+				followButton.textContent = 'follow'
+			}
+
+			fetch(`http://localhost:8000/follow/${owner_id}`, {
+				method: 'POST',
+			})
+				.then(() => console.log('successfully followed/unfollowed'))
+				.catch(() => console.log('failed to follow/unfollow'))
+
+			return
+		}
+
+
 		function handleLike(post_id) {
 			const p = document.getElementById(`like${post_id}`)
 			const button = document.getElementById(`like_button${post_id}`)
