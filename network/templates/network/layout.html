@@ -66,7 +66,7 @@
 				followButton.textContent = 'follow'
 			}
 
-			fetch(`http://localhost:8000/follow/${owner_id}`, {
+			fetch(`https://tokyosocial.onrender.com/${owner_id}`, {
 				method: 'POST',
 			})
 				.then(() => console.log('successfully followed/unfollowed'))
@@ -92,7 +92,7 @@
 				console.log(p.innerHTML)
 			}
 
-			fetch(`http://localhost:8000/like/${post_id}/`, {
+			fetch(`https://tokyosocial.onrender.com/like/${post_id}/`, {
 				method: 'POST',
 			})
 				.then(() => console.log('success'))
@@ -135,7 +135,7 @@
 				p.style.display = 'block'
 				edit.style.display = 'block'
 
-				fetch(`http://localhost:8000/edit/${num}`, {
+				fetch(`https://tokyosocial.onrender.com/edit/${num}`, {
 					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',
