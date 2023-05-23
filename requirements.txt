@@ -1,3 +1,5 @@
 asgiref
-Django
+Django.
+gunicorn
 sqlparse
+whitenoise
