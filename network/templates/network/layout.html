@@ -66,7 +66,7 @@
 				followButton.textContent = 'follow'
 			}
 
-			fetch(`https://tokyosocial.onrender.com/${owner_id}`, {
+			fetch(`https://tokyosocial.onrender.com/follow/${owner_id}`, {
 				method: 'POST',
 			})
 				.then(() => console.log('successfully followed/unfollowed'))
